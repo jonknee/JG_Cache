@@ -1,0 +1,26 @@
+See http://www.jongales.com/blog/2009/02/18/simple-file-based-php-cache-class/ for more information and comments. This code is several years old, but has proven useful for some other people.
+
+I needed a simple file-based cache for a PHP project the other day and figured I would share.
+
+If you’re looking to cache rendered templates or total site caching, this is probably not the code for you. I wrote this to cache an XML data feed and then render the rest of the page dynamically. It can cache any PHP data type though so a good use case is to cache the results of database queries.
+
+Example usage
+
+<?php
+
+$cache = new JG_Cache('/path/to/cache');  //Make sure it exists and is writeable  
+  
+$data = $cache->get('key');  
+  
+if ($data === FALSE)  
+{  
+    $data = 'This will be cached';  
+    $cache->set('key', $data);  
+}  
+  
+//Do something with $data
+?>
+
+While we’re using a string here, the class uses serialize() and unserialize(), so you can cache whatever PHP data types you want. Objects are especially handy, at least for what I needed to use it for. The cache files themselves are stored as a hash of the key name so you don’t have to worry about file naming rules.
+
+It’s designed to fail silently so your code should always be able to access the data without the cache. The beauty of it is there are only a few extra lines to implement the caching and the rest of your code can remain the same.
