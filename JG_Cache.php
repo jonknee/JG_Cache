@@ -48,7 +48,7 @@ class JG_Cache {
 
         if (filesize($cache_path) > 0)
         {
-            $cache = unserialize(fread($fp, filesize($cache_path)));
+            $cache = unserialize(base64_decode(fread($fp, filesize($cache_path))));
         }
         else
         {
@@ -78,7 +78,7 @@ class JG_Cache {
 
         if (flock($fp, LOCK_EX))
         {
-            fwrite($fp, serialize($data));
+            fwrite($fp, base64_encode(serialize($data)));
             flock($fp, LOCK_UN);
         }
         else
